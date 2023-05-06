@@ -42,7 +42,7 @@ import (
 )
 
 const (
-	agentWriteBacklog = 160000 // 16
+	agentWriteBacklog = 1600 // 16
 )
 
 var (

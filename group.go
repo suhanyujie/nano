@@ -138,7 +138,7 @@ func (c *Group) Broadcast(route string, v interface{}) error {
 
 // BroadcastToAnother 排除自己的广播。
 // @param selfUid 自己的 uid
-func (c *Group) BroadcastToAnother(route string, selfUid int32, v interface{}) error {
+func (c *Group) BroadcastToAnother(route string, selfUid string, v interface{}) error {
 	var err error
 	if c.isClosed() {
 		return ErrClosedGroup
@@ -148,14 +148,14 @@ func (c *Group) BroadcastToAnother(route string, selfUid int32, v interface{}) e
 	defer c.mu.RUnlock()
 
 	for _, s := range c.sessions {
-		if s.UID() == int64(selfUid) {
+		if s.GetUid() == selfUid {
 			continue
 		}
 		if s.UID() <= 0 {
 			continue
 		}
 		if err = s.Push(route, v); err != nil {
-			log.Println(fmt.Sprintf("[BroadcastToAnother] Session push message error, ID=%d, UID=%d, Error=%s", s.ID(), s.UID(), err.Error()))
+			log.Println(fmt.Sprintf("[BroadcastToAnother] Session push message error, ID=%d, UID=%v, Error=%s", s.ID(), s.UID(), err.Error()))
 		}
 	}
 

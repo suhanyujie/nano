@@ -47,7 +47,7 @@ type Hook func()
 var (
 	chDie   = make(chan struct{})
 	chExit  = make(chan struct{})
-	chTasks = make(chan Task, 102400) // 1<<8
+	chTasks = make(chan Task, 102400) // old: 1<<8
 	started int32
 	closed  int32
 )
@@ -74,17 +74,14 @@ func Sched() {
 	}()
 
 	for {
-		if time.Now().Second() == 10 {
-			log.Printf("[Sched] new round. chTasks len: %d", len(chTasks))
-		}
+		//if time.Now().Second() == 10 {
+		//	log.Printf("[Sched] new round. chTasks len: %d", len(chTasks))
+		//}
 		select {
 		case <-ticker.C:
 			cron()
-			// log.Printf("[Sched] ticker.C end")
 		case f := <-chTasks:
-			log.Printf("[Sched] chTasks start")
 			try(f)
-			log.Printf("[Sched] chTasks end")
 		case <-chDie:
 			return
 		}
@@ -105,5 +102,5 @@ func PushTask(task Task) {
 		log.Printf("[PushTask] err. msg length is too many. length:%d", len(chTasks))
 	}
 	chTasks <- task
-	log.Printf("[PushTask] new task be pushed. len: %d", len(chTasks))
+	// log.Printf("[PushTask] new task be pushed. len: %d", len(chTasks))
 }

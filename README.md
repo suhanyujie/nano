@@ -1,7 +1,8 @@
 # nano
 定制版 nano
 
-## dev
-### proto gen
-* `protoc -I=./proto/chat_proto/ --go_out=./proto/chat_proto/ ./proto/chat_proto/chat.proto`
-* 或者借助脚本：`./build.sh chat_proto/v1`
+## using
+建议将该库作为子模块引入项目中：`git submodule add http://192.168.3.3:9980/shy/nano.git pkg/nano`
+
+## ref
+* git submodule: https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97

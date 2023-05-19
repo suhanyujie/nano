@@ -304,7 +304,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 		// 因为定制化原因，只能接收数据帧，并解析出来
 		// originLog.Printf("[processPacket] pack data: %v \n", p.Data)
 		if len(p.Data) < 1 {
-			originLog.Printf("[processPacket] pack data len is 0, maybe it's heartbeat")
+			// originLog.Printf("[processPacket] pack data len is 0, maybe it's heartbeat")
 			return nil
 		}
 		// 尝试解析为 特定对象
@@ -572,7 +572,7 @@ func (h *LocalHandler) localProcess(handler *component.Handler, lastMid uint64, 
 		data = reflect.New(handler.Type.Elem()).Interface()
 		err := msgpack.NewSerializer().Unmarshal(msg.Data, data)
 		if err != nil {
-			log.Println(fmt.Sprintf("[localProcess] Deserialize to %T failed: %+v (%v)", data, err, payload))
+			// log.Println(fmt.Sprintf("[localProcess] Deserialize to %T failed: %+v (%v)", data, err, payload))
 			return
 		}
 	}

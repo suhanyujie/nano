@@ -24,7 +24,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	originLog "log"
 	"math/rand"
 	"net"
 	"reflect"
@@ -209,7 +208,7 @@ func (h *LocalHandler) handle(conn net.Conn) {
 
 	// startup write goroutine
 	go agent.write()
-	// originLog.Printf("[handle] env.debug: %v", env.Debug)
+	// log.Printf("[handle] env.debug: %v", env.Debug)
 	if env.Debug {
 		log.Println(fmt.Sprintf("[handle] New session established: %s", agent.String()))
 	}
@@ -257,7 +256,7 @@ func (h *LocalHandler) handle(conn net.Conn) {
 		// TODO(warning): decoder use slice for performance, packet data should be copy before next Decode
 		packets, err := agent.decoder.Decode(buf[:n])
 		if err != nil {
-			originLog.Printf("[handle] Decode err: %v", err)
+			log.Printf("[handle] Decode err: %v", err)
 			// process packets decoded
 			//for _, p := range packets {
 			//	if err := h.processPacket(agent, p); err != nil {
@@ -302,9 +301,9 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 
 	case packet.Data:
 		// 因为定制化原因，只能接收数据帧，并解析出来
-		// originLog.Printf("[processPacket] pack data: %v \n", p.Data)
+		// log.Printf("[processPacket] pack data: %v \n", p.Data)
 		if len(p.Data) < 1 {
-			// originLog.Printf("[processPacket] pack data len is 0, maybe it's heartbeat")
+			// log.Printf("[processPacket] pack data len is 0, maybe it's heartbeat")
 			return nil
 		}
 		// 尝试解析为 特定对象
@@ -314,7 +313,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 			inputDataOri = &farmV1.IRequest{}
 			err := env.Serializer.Unmarshal(p.Data, inputDataOri)
 			if err != nil {
-				originLog.Printf("[processPacket] Unmarshal err: %v, data str: %s, data: %v\n", err, string(p.Data), p.Data)
+				log.Printf("[processPacket] Unmarshal err: %v, data str: %s, data: %v\n", err, string(p.Data), p.Data)
 				// 发送一个错误响应
 				SendErrReply(agent, inputDataOri)
 				return nil
@@ -323,7 +322,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 			inputDataOri = &throwV1.IRequestProtocol{}
 			err := env.Serializer.Unmarshal(p.Data, inputDataOri)
 			if err != nil {
-				originLog.Printf("[processPacket] Unmarshal err: %v, data str: %s, data: %v\n", err, string(p.Data), p.Data)
+				log.Printf("[processPacket] Unmarshal err: %v, data str: %s, data: %v\n", err, string(p.Data), p.Data)
 				// 发送一个错误响应
 				SendErrReply(agent, inputDataOri)
 				return nil
@@ -347,7 +346,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 			// 表示登录
 			agent.setStatus(statusWorking)
 			if env.Debug {
-				originLog.Printf("[processPacket] login sid=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr())
+				log.Printf("[processPacket] login sid=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr())
 			}
 		} else if inputData.Method == "HeartBeat" {
 			switch env.CustomProtocolStructType {
@@ -364,7 +363,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 		} else {
 			// if inputData.Data
 			if agent.status() < statusWorking {
-				originLog.Printf("[processPacket] conn status is less than statusWorking, user should login first...\n")
+				log.Printf("[processPacket] conn status is less than statusWorking, user should login first...\n")
 				SendErrReply(agent, &inputData)
 				return nil
 				// return fmt.Errorf("[processPacket] receive data on socket which not yet ACK, session will be closed immediately, remote=%s", agent.conn.RemoteAddr().String())
@@ -373,7 +372,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 		// 将数据转换为 Message 对象
 		msg, err := message.Decode(&inputData)
 		if err != nil {
-			originLog.Printf("[processPacket] message.Decode err: %v\n", err)
+			log.Printf("[processPacket] message.Decode err: %v\n", err)
 			return err
 		}
 		h.processMessage(agent, msg)
@@ -436,7 +435,7 @@ func SendReply(agent *agent, code int32, data proto.Message, req interface{}) {
 		payload:    dataBytes,
 		payloadObj: resp,
 	}); err != nil {
-		originLog.Printf("[SendErrReply] send err: %v", err)
+		log.Printf("[SendErrReply] send err: %v", err)
 	}
 }
 
@@ -533,7 +532,7 @@ func (h *LocalHandler) processMessage(agent *agent, msg *message.Message) {
 	//}()
 	handler, found := h.localHandlers[msg.Route]
 	if !found {
-		originLog.Printf("[processMessage] coundnt found handler route: %s", msg.Route)
+		log.Printf("[processMessage] coundnt found handler route: %s", msg.Route)
 		h.remoteProcess(agent.session, msg, false)
 	} else {
 		h.localProcess(handler, lastMid, agent.session, msg)
@@ -548,7 +547,7 @@ type WsConnWrapper struct {
 func (h *LocalHandler) handleWS(connWrapper WsConnWrapper) {
 	c, err := newWSConn(connWrapper.conn)
 	if err != nil {
-		originLog.Printf("[handleWS] ws conn err: %v", err)
+		log.Printf("[handleWS] ws conn err: %v", err)
 		return
 	}
 	go h.handle(c)

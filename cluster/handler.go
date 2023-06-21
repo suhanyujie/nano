@@ -360,6 +360,7 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 					Msg:  "heartbeat ok",
 				}, &inputData)
 			}
+			return nil
 		} else {
 			// if inputData.Data
 			if agent.status() < statusWorking {

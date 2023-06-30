@@ -4,7 +4,7 @@ import (
 	originLog "log"
 
 	jsonx "github.com/lonng/nano/serialize/json"
-	throwV1 "github.com/suhanyujie/throw_interface/golang_pb/throw/v1"
+	throwV1 "gitlab.gamefipro.com/game-server/throw_interface/golang_pb/throw/v1"
 )
 
 func SetWorkingForConn() {

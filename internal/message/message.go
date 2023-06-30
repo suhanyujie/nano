@@ -31,7 +31,7 @@ import (
 	"github.com/lonng/nano/internal/env"
 	"github.com/lonng/nano/internal/log"
 	"github.com/lonng/nano/pkg/utils/encoding"
-	throwV1 "github.com/suhanyujie/throw_interface/golang_pb/throw/v1"
+	throwV1 "gitlab.gamefipro.com/game-server/throw_interface/golang_pb/throw/v1"
 	"google.golang.org/protobuf/proto"
 )
 

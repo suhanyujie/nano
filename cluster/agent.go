@@ -38,7 +38,7 @@ import (
 	"github.com/lonng/nano/pipeline"
 	"github.com/lonng/nano/scheduler"
 	"github.com/lonng/nano/session"
-	throwV1 "github.com/suhanyujie/throw_interface/golang_pb/throw/v1"
+	throwV1 "gitlab.gamefipro.com/game-server/throw_interface/golang_pb/throw/v1"
 )
 
 const (

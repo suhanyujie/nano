@@ -15,7 +15,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/urfave/cli v1.22.5
 	github.com/vmihailenco/msgpack/v5 v5.3.5
-	gitlab.gamefipro.com/game-server/throw_interface v0.0.0
+	gitlab.gamefipro.com/game-server/throw_interface v1.1.0
 	go.uber.org/atomic v1.8.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.18.1 // indirect
@@ -26,4 +26,4 @@ require (
 	google.golang.org/protobuf v1.28.1
 )
 
-replace gitlab.gamefipro.com/game-server/throw_interface v0.0.0 => gitlab.gamefipro.com/game-server/throw_interface.git v1.1.0
+replace gitlab.gamefipro.com/game-server/throw_interface v1.1.0 => gitlab.gamefipro.com/game-server/throw_interface.git v1.1.0
